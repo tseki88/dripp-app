@@ -17,7 +17,12 @@ const TimerContainer = () => {
 
   return (
     <View>
-      <Timer isRunning={isRunning} now={now} setNow={setNow} />
+      <Timer
+        isRunning={isRunning}
+        now={now}
+        setNow={setNow}
+        setIsRunning={setIsRunning}
+      />
       <TouchableOpacity style={styles.button} onPress={() => startTimer()}>
         <Text>Start</Text>
       </TouchableOpacity>
