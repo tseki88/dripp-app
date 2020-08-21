@@ -1,13 +1,15 @@
-export interface StepsInterface {
-  [index: number]: {
-    id: number;
-    stepType: number;
-    // step type to be based off number
-    notes?: string;
-    duration: number;
-    targetWeight?: number;
-    // mandatory label when custom step?
-  };
+export interface StepInterface {
+  id: number;
+  stepType: number;
+  // step type to be based off number
+  notes?: string;
+  duration: number;
+  targetWeight?: number;
+  // mandatory label when custom step?
+}
+
+export interface StepsArrayInterface {
+  [index: number]: StepInterface;
 }
 
 export interface brewMetricInterface {
@@ -19,9 +21,10 @@ export interface brewMetricInterface {
 }
 
 export interface RecipeInterface {
+  id: number;
   brewType: number;
   // for smaller local storage, brew types to be based off number
   name: string;
   metric: brewMetricInterface;
-  steps: StepsInterface;
+  steps: StepsArrayInterface;
 }
