@@ -2,7 +2,7 @@ export interface StepInterface {
   id: number;
   stepType: number;
   // step type to be based off number
-  notes?: string;
+  notes: string;
   duration: number;
   targetWeight?: number;
   // mandatory label when custom step?

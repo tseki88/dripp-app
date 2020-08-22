@@ -5,7 +5,7 @@ interface TimeInterface {
   time: number;
 }
 
-const TimerDisplay = ({time}: TimeInterface) => {
+const TimeDisplay = ({time}: TimeInterface) => {
   if (time < 0) {
     time = 0;
   }
@@ -16,18 +16,20 @@ const TimerDisplay = ({time}: TimeInterface) => {
   return (
     <View>
       <Text style={styles.text}>
-        {minutes < 10 ? '0' + minutes : minutes} :
+        {minutes < 10 ? '0' + minutes : minutes}
+        <Text> : </Text>
         {seconds < 10 ? '0' + seconds : seconds}
-        {/* .{tenMilliseconds} */}
+        {/* <Text> . </Text> */}
+        {/* {tenMilliseconds} */}
       </Text>
     </View>
   );
 };
 
-export default TimerDisplay;
+export default TimeDisplay;
 
 const styles = StyleSheet.create({
   text: {
-    fontSize: 28,
+    fontSize: 20,
   },
 });

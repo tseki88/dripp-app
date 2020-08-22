@@ -9,35 +9,33 @@
  */
 
 import React from 'react';
-import {
-  SafeAreaView,
-  StyleSheet,
-  // ScrollView,
-  // View,
-  // Text,
-  StatusBar,
-} from 'react-native';
+import {StatusBar} from 'react-native';
+import {enableScreens} from 'react-native-screens';
+import {createNativeStackNavigator} from 'react-native-screens/native-stack';
+import {NavigationContainer} from '@react-navigation/native';
 
-import TimerScreen from './src/screen/TimerScreen';
-// import RecipeContainer from './src/screen/recipe/RecipeContainer';
+import {RecipeScreen, TimerScreen, HomeScreen} from './src/screen';
 
-declare const global: {HermesInternal: null | {}};
+enableScreens();
+const Stack = createNativeStackNavigator();
 
 const App = () => {
   return (
     <>
       <StatusBar barStyle="dark-content" backgroundColor="#0000" />
-      <SafeAreaView style={styles.safeView}>
-        <TimerScreen />
-      </SafeAreaView>
+      <NavigationContainer>
+        <Stack.Navigator initialRouteName="Home">
+          <Stack.Screen name="Home" component={HomeScreen} />
+          <Stack.Screen
+            name="Timer"
+            component={TimerScreen}
+            options={{title: 'Timer'}}
+          />
+          <Stack.Screen name="Recipe" component={RecipeScreen} />
+        </Stack.Navigator>
+      </NavigationContainer>
     </>
   );
 };
-
-const styles = StyleSheet.create({
-  safeView: {
-    flex: 1,
-  },
-});
 
 export default App;

@@ -1,20 +1,15 @@
 import React from 'react';
-import {StyleSheet, Text, View} from 'react-native';
+import {StyleSheet, View} from 'react-native';
 
 interface ProgressProps {
   numerator: number;
   denominator: number;
-  stepIndex: number;
 }
 
-const TimerProgressBar = ({
-  numerator,
-  denominator,
-  stepIndex,
-}: ProgressProps) => {
+// To use animated api for progress bar animation
+const ProgressBar = ({numerator, denominator}: ProgressProps) => {
   return (
     <View style={styles.progressBar}>
-      <Text>{stepIndex + 1}</Text>
       <View
         style={[
           styles.progressFill,
@@ -25,7 +20,7 @@ const TimerProgressBar = ({
   );
 };
 
-export default TimerProgressBar;
+export default ProgressBar;
 
 const styles = StyleSheet.create({
   progressBar: {

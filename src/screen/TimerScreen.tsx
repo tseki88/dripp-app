@@ -1,57 +1,26 @@
 import React, {useState, useEffect} from 'react';
-import {
-  StyleSheet,
-  Text,
-  View,
-  TouchableOpacity,
-  Vibration,
-} from 'react-native';
+import {StyleSheet, View, Vibration} from 'react-native';
 import globalStyle from '../styles/globalStyle';
-import TimerProgressBar from '../components/TimerProgressBar';
 import useInterval from '../hooks/useInterval';
-import TimerDisplay from '../components/TimeDisplay';
+import {ProgressBar, AppText} from '../components';
+import sampleData from '../sampleData.json';
+import {Button, TimeDisplay} from '../components/Timer';
 
+// TODO: figure out ways to improve performance.
 const TimerScreen = () => {
-  // this array is temp data
-  const [stepCount, setStepCount] = useState<Array<number>>([
-    3000,
-    6000,
-    4000,
-    10000,
-  ]);
-
-  // useEffect(() => {
-  //   const steps = [
-  //     {
-  //       id: 0,
-  //       stepType: 1,
-  //       duration: 3000,
-  //       targetWeight: 30,
-  //     },
-  //     {
-  //       id: 1,
-  //       stepType: 4,
-  //       duration: 90000,
-  //       notes: 'we wait',
-  //     },
-  //     {
-  //       id: 2,
-  //       stepType: 3,
-  //       duration: 2800,
-  //       targetWeight: 80,
-  //     },
-  //   ];
-
-  //   const durations = steps.map((e) => e.duration);
-  //   setStepCount(durations);
-  // }, []);
-
   const [isRunning, setIsRunning] = useState<boolean>(false);
   const [now, setNow] = useState<number>(0);
   const [time, setTime] = useState<number>(0);
   const [stepIndex, setStepIndex] = useState<number>(0);
   const [stepSum, setStepSum] = useState<number>(0);
   const [timerBreakpoint, setTimerBreakpoint] = useState(0);
+  const [stepCount, setStepCount] = useState<Array<number>>([]);
+
+  const testRecipe = sampleData.recipe[0].steps;
+
+  useEffect(() => {
+    setStepCount(testRecipe.map((e) => e.duration));
+  }, []);
 
   useEffect(() => {
     const sumof = stepCount.reduce((a, b) => {
@@ -74,7 +43,7 @@ const TimerScreen = () => {
       });
       timeCheck();
     },
-    isRunning ? 60 : null,
+    isRunning ? 180 : null,
   );
 
   const stepTransition = () => {
@@ -97,13 +66,10 @@ const TimerScreen = () => {
     }
   };
 
-  const startTimer = () => {
+  const toggleRunning = () => {
     setNow(Date.now());
-    setIsRunning(true);
-  };
-
-  const stopTimer = () => {
-    setIsRunning(false);
+    Vibration.vibrate(100);
+    setIsRunning((prev) => !prev);
   };
 
   const skipStep = () => {
@@ -115,39 +81,43 @@ const TimerScreen = () => {
     <View style={globalStyle.wrapper}>
       <View style={styles.displayContainer}>
         <View style={styles.displayProgress}>
-          <TimerProgressBar
-            numerator={stepSum - time}
-            denominator={stepSum}
-            stepIndex={stepIndex}
-          />
+          <ProgressBar numerator={stepSum - time} denominator={stepSum} />
         </View>
         <View style={styles.displayStepDetails}>
-          <Text>Total</Text>
-          <TimerDisplay time={time} />
-          <Text>current</Text>
-          <TimerDisplay time={time - timerBreakpoint} />
+          <AppText>Total</AppText>
+          <TimeDisplay time={time} />
+          <AppText>current</AppText>
+          <TimeDisplay time={time - timerBreakpoint} />
+          <View>
+            <View style={{height: 160}}>
+              <ProgressBar
+                numerator={timerBreakpoint + stepCount[stepIndex] - time}
+                denominator={stepCount[stepIndex]}
+              />
+            </View>
+            <AppText>Step: {stepIndex + 1}</AppText>
+            <AppText>{testRecipe[stepIndex].stepType}</AppText>
+            {testRecipe[stepIndex].notes !== '' ? (
+              <AppText>{testRecipe[stepIndex].notes}</AppText>
+            ) : null}
+          </View>
         </View>
       </View>
       <View style={styles.buttonContainer}>
-        <TouchableOpacity style={styles.button} onPress={() => startTimer()}>
-          <Text>Start</Text>
-        </TouchableOpacity>
-        <TouchableOpacity style={styles.button} onPress={() => stopTimer()}>
-          <Text>Stop</Text>
-        </TouchableOpacity>
-        <TouchableOpacity style={styles.button} onPress={() => skipStep()}>
-          <Text>Skip</Text>
-        </TouchableOpacity>
+        <Button
+          text={!isRunning ? 'Start' : 'Pause'}
+          pressHandler={toggleRunning}
+        />
+        <Button text={'Skip'} pressHandler={skipStep} />
         {/* Temporary Button to make it easier for testing timer */}
-        <TouchableOpacity
-          style={styles.button}
-          onPress={() => {
+        <Button
+          text={'Clear'}
+          pressHandler={() => {
             setTime(stepSum);
             setStepIndex(0);
             setTimerBreakpoint(stepSum - stepCount[0]);
-          }}>
-          <Text>Clear</Text>
-        </TouchableOpacity>
+          }}
+        />
       </View>
     </View>
   );
@@ -172,15 +142,12 @@ const styles = StyleSheet.create({
   },
   displayProgress: {
     flex: 1,
+    flexDirection: 'row',
+    flexWrap: 'nowrap',
     justifyContent: 'center',
     alignItems: 'center',
   },
   displayStepDetails: {
     flex: 4,
-  },
-  button: {
-    width: '24%',
-    height: 50,
-    borderWidth: 1,
   },
 });
