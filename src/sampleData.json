@@ -3,9 +3,9 @@
     {
       "id": 1,
       "brewType": 1,
-      "name": "test brew",
+      "name": "test brew numero1",
       "metric": {
-        "coffeeGrind": 18,
+        "coffeeGrind": 3,
         "coffeeWeight": 12,
         "waterTemp": 95,
         "waterWeight": 250,
@@ -23,6 +23,52 @@
           "id": 1,
           "stepType": 4,
           "duration": 20000,
+          "notes": "we wait"
+        },
+        {
+          "id": 2,
+          "stepType": 3,
+          "duration": 120000,
+          "targetWeight": 80,
+          "notes": ""
+        },
+        {
+          "id": 3,
+          "stepType": 2,
+          "duration": 10000,
+          "notes": "this test brew step though"
+        },
+        {
+          "id": 4,
+          "stepType": 2,
+          "duration": 15000,
+          "notes": "wait"
+        }
+      ]
+    },
+    {
+      "id": 2,
+      "brewType": 3,
+      "name": "test test brew numero1",
+      "metric": {
+        "coffeeGrind": 5,
+        "coffeeWeight": 13,
+        "waterTemp": 99,
+        "waterWeight": 240,
+        "ratio": 13.2
+      },
+      "steps": [
+        {
+          "id": 0,
+          "stepType": 1,
+          "duration": 15000,
+          "targetWeight": 30,
+          "notes": "pre-infusion"
+        },
+        {
+          "id": 1,
+          "stepType": 4,
+          "duration": 25000,
           "notes": "we wait"
         },
         {

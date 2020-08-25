@@ -1,11 +1,11 @@
-import React from 'react';
-import {Text, TextProps} from 'react-native';
+import React, {ReactNode} from 'react';
+import {Text} from 'react-native';
 import globalStyle from '../styles/globalStyle';
 
-type AppTextProps = {
-  children: TextProps;
+interface AppTextProps {
+  children: ReactNode;
   style?: object | null;
-};
+}
 
 const AppText = ({children, style = null}: AppTextProps) => {
   return (

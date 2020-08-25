@@ -10,11 +10,25 @@ export function actuatedNormalize(size: number) {
 
 const globalStyle = StyleSheet.create({
   wrapper: {
-    marginHorizontal: 5,
+    // backgroundColor: '#3d3d3f',
+    paddingHorizontal: 5,
+    paddingVertical: 5,
     flex: 1,
   },
   fontBase: {
-    fontSize: actuatedNormalize(16),
+    fontSize: actuatedNormalize(18),
+  },
+  fontHeaderOne: {
+    fontSize: actuatedNormalize(26),
+  },
+  fontHeaderTwo: {
+    fontSize: actuatedNormalize(22),
+  },
+  fontLabelSmall: {
+    fontSize: actuatedNormalize(14),
+  },
+  fontSmall: {
+    fontSize: actuatedNormalize(15),
   },
 });
 

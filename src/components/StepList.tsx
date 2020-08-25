@@ -1,8 +1,9 @@
 import React from 'react';
 import {StyleSheet, View} from 'react-native';
-import {StepInterface} from '../utils/recipeInterface';
-import {TimeDisplay} from './Timer';
+import {StepInterface} from '../utils/typeInterface';
+import TimeDisplay from './TimeDisplay';
 import AppText from './AppText';
+import globalStyle from '../styles/globalStyle';
 
 interface Expected {
   step: StepInterface;
@@ -15,11 +16,13 @@ const StepList = ({step, index}: Expected) => {
   return (
     <View style={styles.listItem}>
       <View style={styles.stepNumber}>
-        <AppText>{index + 1}</AppText>
+        <AppText style={globalStyle.fontSmall}>{index + 1}</AppText>
       </View>
       <View style={styles.stepAppText}>
         <AppText>{stepType}</AppText>
-        {notes ? <AppText>{notes}</AppText> : null}
+        {notes ? (
+          <AppText style={globalStyle.fontSmall}>{notes}</AppText>
+        ) : null}
       </View>
       <TimeDisplay time={duration} />
     </View>
@@ -35,7 +38,7 @@ const styles = StyleSheet.create({
     flexWrap: 'nowrap',
     justifyContent: 'space-between',
     borderBottomWidth: StyleSheet.hairlineWidth,
-    borderBottomColor: 'brown',
+    borderBottomColor: '#725034',
     paddingVertical: 5,
     paddingHorizontal: 5,
   },
@@ -44,8 +47,8 @@ const styles = StyleSheet.create({
     borderRadius: 25,
     width: 20,
     height: 20,
-    paddingHorizontal: 4,
     marginRight: 5,
+    alignItems: 'center',
   },
   stepAppText: {
     flex: 1,

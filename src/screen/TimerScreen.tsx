@@ -1,13 +1,22 @@
 import React, {useState, useEffect} from 'react';
 import {StyleSheet, View, Vibration} from 'react-native';
+import {ProgressBar, AppText, Button, TimeDisplay} from '../components';
 import globalStyle from '../styles/globalStyle';
 import useInterval from '../hooks/useInterval';
-import {ProgressBar, AppText} from '../components';
-import sampleData from '../sampleData.json';
-import {Button, TimeDisplay} from '../components/Timer';
+
+import {MainStackParamList} from '../utils/typeInterface';
+import {NavigationProp, RouteProp} from '@react-navigation/native';
+
+type TimerRouteProps = RouteProp<MainStackParamList, 'Timer'>;
+
+interface TimerScreenProps {
+  navigation?: NavigationProp<any, any>;
+  route: TimerRouteProps;
+}
 
 // TODO: figure out ways to improve performance.
-const TimerScreen = () => {
+const TimerScreen = ({route}: TimerScreenProps) => {
+  
   const [isRunning, setIsRunning] = useState<boolean>(false);
   const [now, setNow] = useState<number>(0);
   const [time, setTime] = useState<number>(0);
@@ -16,11 +25,12 @@ const TimerScreen = () => {
   const [timerBreakpoint, setTimerBreakpoint] = useState(0);
   const [stepCount, setStepCount] = useState<Array<number>>([]);
 
-  const testRecipe = sampleData.recipe[0].steps;
+  const params = route.params;
+  const testRecipe = params.steps;
 
   useEffect(() => {
     setStepCount(testRecipe.map((e) => e.duration));
-  }, []);
+  }, [testRecipe]);
 
   useEffect(() => {
     const sumof = stepCount.reduce((a, b) => {
