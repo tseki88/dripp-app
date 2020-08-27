@@ -1,9 +1,10 @@
-import React from 'react';
+import React, {useState, useEffect} from 'react';
 import {StyleSheet, View, FlatList, Pressable, ScrollView} from 'react-native';
-import {StepList, AppText, TimeDisplay, Card} from '../components';
+import {StepList, AppText, TimeDisplay, Card, Button} from '../components';
 import globalStyle from '../styles/globalStyle';
-import {MainStackParamList} from '../utils/typeInterface';
+import {MainStackParamList, StepInterface} from '../utils/typeInterface';
 import {NavigationProp, RouteProp} from '@react-navigation/native';
+import grindParse from '../utils/grindParse';
 
 type RecipeRouteProps = RouteProp<MainStackParamList, 'Recipe'>;
 
@@ -13,15 +14,29 @@ interface RecipeScreenProps {
 }
 
 const RecipeScreen = ({navigation, route}: RecipeScreenProps) => {
+  const [editMode, setEditMode] = useState(false);
+
   const {brewType, name, metric, steps} = route.params;
 
-  const totalTime = steps.reduce((a: number, b: any) => {
+  const [stepsArray, setStepsArray] = useState<StepInterface[]>(steps);
+
+  useEffect(() => {
+    if (route.params?.newStep) {
+      setStepsArray((prev) => [...prev, route.params.newStep]);
+    }
+  }, [route.params?.newStep]);
+
+  const totalTime = steps.reduce((a: number, b: StepInterface) => {
     return a + b.duration;
   }, 0);
 
   return (
-    <ScrollView style={globalStyle.wrapper}>
-      <View>
+    <View style={globalStyle.wrapper}>
+      <Button
+        text={editMode ? 'Lock' : 'Edit'}
+        pressHandler={() => setEditMode((prev) => !prev)}
+      />
+      <View style={{flex: 1}}>
         <View style={{display: 'flex', alignItems: 'center'}}>
           <AppText>{brewType}</AppText>
           <AppText>{name}</AppText>
@@ -29,20 +44,22 @@ const RecipeScreen = ({navigation, route}: RecipeScreenProps) => {
         <View style={styles.metricsContainer}>
           <View style={styles.spaceBetween}>
             <Card label="Grind:">
-              <AppText>{metric.coffeeGrind}</AppText>
+              <AppText>{grindParse(metric.coffeeGrind)}</AppText>
             </Card>
             <Card label="Water Temp:" style={{alignItems: 'flex-end'}}>
               <AppText>{metric.waterTemp} C</AppText>
             </Card>
           </View>
           <View style={styles.spaceBetween}>
-            <Card label="Coffee:" style={{alignItems: 'center'}}>
-              <AppText style={globalStyle.fontHeaderTwo}>
+            <Card label="Coffee:">
+              <AppText
+                style={[globalStyle.fontHeaderTwo, {textAlign: 'center'}]}>
                 {metric.coffeeWeight} g
               </AppText>
             </Card>
-            <Card label="Water:" style={{alignItems: 'center'}}>
-              <AppText style={globalStyle.fontHeaderTwo}>
+            <Card label="Water:">
+              <AppText
+                style={[globalStyle.fontHeaderTwo, {textAlign: 'center'}]}>
                 {metric.waterWeight} g
               </AppText>
             </Card>
@@ -58,19 +75,30 @@ const RecipeScreen = ({navigation, route}: RecipeScreenProps) => {
           <TimeDisplay time={totalTime} style={globalStyle.fontHeaderTwo} />
         </View>
         <FlatList
-          data={steps}
+          data={stepsArray}
           renderItem={({item, index}) => {
             return <StepList step={item} index={index} />;
           }}
           keyExtractor={(item) => item.id.toString()}
         />
+        {editMode ? (
+          <Button
+            text="Add Step"
+            pressHandler={() =>
+              // navigation.navigate('StepEdit', {
+              //   onGoBack: (item: StepInterface) =>
+              //     setStepsArray((prev) => [...prev, item]),
+              // })
+              navigation.navigate('StepEdit')
+            }
+          />
+        ) : null}
       </Card>
-      <Pressable
-        onPress={() => navigation.navigate('Timer', route.params)}
-        style={{padding: 10, borderWidth: 1, marginBottom: 10}}>
-        <AppText>Get Brewin</AppText>
-      </Pressable>
-    </ScrollView>
+      <Button
+        text="Get Brewin"
+        pressHandler={() => navigation.navigate('Timer', route.params)}
+      />
+    </View>
   );
 };
 
@@ -86,6 +114,6 @@ const styles = StyleSheet.create({
     flex: 1,
   },
   stepListContainer: {
-    flex: 2,
+    flex: 1,
   },
 });

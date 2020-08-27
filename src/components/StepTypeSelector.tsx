@@ -2,12 +2,12 @@ import React, {useState} from 'react';
 import {StyleSheet, View, Pressable} from 'react-native';
 import AppText from './AppText';
 
-interface StepSelectorProps {
+interface StepTypeSelectorProps {
   stepType: number;
   setStepType: Function;
 }
 
-const StepSelector = ({stepType, setStepType}: StepSelectorProps) => {
+const StepTypeSelector = ({stepType, setStepType}: StepTypeSelectorProps) => {
   const [displaySelection, setDisplaySelection] = useState<boolean>(false);
 
   const selection = [0, 1, 2, 3, 4];
@@ -41,7 +41,7 @@ const StepSelector = ({stepType, setStepType}: StepSelectorProps) => {
   );
 };
 
-export default StepSelector;
+export default StepTypeSelector;
 
 const styles = StyleSheet.create({
   selectionContainer: {

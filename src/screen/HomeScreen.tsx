@@ -28,15 +28,10 @@ const HomeScreen = ({navigation}: HomeScreenProps) => {
           <AppText>Recipe 2</AppText>
         </Pressable>
         <Pressable
-          onPress={() => navigation.navigate('AddStep')}
+          onPress={() => navigation.navigate('StepEdit')}
           style={{padding: 10, borderWidth: 1}}>
           <AppText>Add Step</AppText>
         </Pressable>
-        {/* <Pressable
-          onPress={() => navigation.navigate('Recipe')}
-          style={styles.circleButton}>
-          <AppText>+</AppText>
-        </Pressable> */}
       </View>
     </View>
   );
@@ -53,14 +48,5 @@ const styles = StyleSheet.create({
   homeMainContainer: {
     flex: 1,
     position: 'relative',
-  },
-  circleButton: {
-    width: 50,
-    height: 50,
-    borderRadius: 25,
-    position: 'absolute',
-    bottom: 20,
-    right: 20,
-    borderWidth: 1,
   },
 });

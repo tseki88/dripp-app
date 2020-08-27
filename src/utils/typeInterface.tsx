@@ -25,9 +25,19 @@ export interface RecipeInterface {
   steps: StepInterface[];
 }
 
+export type RecipePropInterface = {
+  id: number;
+  brewType: number;
+  // for smaller local storage, brew types to be based off number
+  name: string;
+  metric: brewMetricInterface;
+  steps: StepInterface[];
+  newStep?: StepInterface
+}
+
 export type MainStackParamList = {
   Home: undefined;
   Timer: RecipeInterface;
-  Recipe: RecipeInterface;
-  AddStep: undefined;
+  Recipe: RecipePropInterface;
+  StepEdit: StepInterface;
 }

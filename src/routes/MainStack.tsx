@@ -2,7 +2,7 @@ import React from 'react';
 import {enableScreens} from 'react-native-screens';
 import {createNativeStackNavigator} from 'react-native-screens/native-stack';
 
-import {RecipeScreen, TimerScreen, HomeScreen, AddStepScreen} from '../screen';
+import {RecipeScreen, TimerScreen, HomeScreen, StepEditScreen} from '../screen';
 import {MainStackParamList} from '../utils/typeInterface';
 
 // Switch this back to non-native stack navigator.. try to see if keyboard dismiss and back button work
@@ -12,7 +12,9 @@ const Stack = createNativeStackNavigator<MainStackParamList>();
 
 const MainStack = () => {
   return (
-    <Stack.Navigator initialRouteName="Home">
+    <Stack.Navigator
+      initialRouteName="Home"
+      screenOptions={{headerHideShadow: true}}>
       <Stack.Screen
         name="Home"
         component={HomeScreen}
@@ -21,10 +23,10 @@ const MainStack = () => {
       <Stack.Screen
         name="Timer"
         component={TimerScreen}
-        options={{title: 'Timer'}}
+        options={{title: 'Timer', headerShown: false}}
       />
       <Stack.Screen name="Recipe" component={RecipeScreen} />
-      <Stack.Screen name="AddStep" component={AddStepScreen} />
+      <Stack.Screen name="StepEdit" component={StepEditScreen} />
     </Stack.Navigator>
   );
 };
