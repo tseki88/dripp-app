@@ -53,7 +53,7 @@ const TimerScreen = ({route}: TimerScreenProps) => {
       });
       timeCheck();
     },
-    isRunning ? 180 : null,
+    isRunning ? 100 : null,
   );
 
   const stepTransition = () => {
