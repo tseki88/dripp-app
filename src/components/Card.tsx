@@ -13,9 +13,7 @@ const Card = ({children, style = null, label = null}: CardProps) => {
   return (
     <View style={[styles.cardContainer, style]}>
       {label ? (
-        <AppText style={[globalStyle.fontLabelSmall, styles.cardLabel]}>
-          {label}
-        </AppText>
+        <AppText style={[globalStyle.fontLabelSmall]}>{label}</AppText>
       ) : null}
       {children}
     </View>
@@ -30,10 +28,9 @@ const styles = StyleSheet.create({
     margin: 5,
     padding: 5,
     borderRadius: 10,
-    backgroundColor: '#fcf3ec',
+    // backgroundColor: '#fcf3ec',
     // borderWidth: 1,
-  },
-  cardLabel: {
-    color: '#725034',
+    borderBottomWidth: 1,
+    borderBottomColor: '#dedede',
   },
 });

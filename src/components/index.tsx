@@ -6,3 +6,4 @@ export {default as Button} from './Button';
 export {default as StepTypeSelector} from './StepTypeSelector';
 export {default as InputTime} from './InputTime';
 export {default as Card} from './Card';
+export {default as RecipeList} from './RecipeList';

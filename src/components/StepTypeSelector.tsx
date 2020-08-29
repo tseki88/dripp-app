@@ -1,6 +1,7 @@
 import React, {useState} from 'react';
 import {StyleSheet, View, Pressable} from 'react-native';
 import AppText from './AppText';
+import stepParse from '../utils/stepParse';
 
 interface StepTypeSelectorProps {
   stepType: number;
@@ -10,9 +11,9 @@ interface StepTypeSelectorProps {
 const StepTypeSelector = ({stepType, setStepType}: StepTypeSelectorProps) => {
   const [displaySelection, setDisplaySelection] = useState<boolean>(false);
 
-  const selection = [0, 1, 2, 3, 4];
+  const selection = [0, 1, 2, 3, 4, 5];
 
-  const pressHandler = (e: number) => {
+  const pressHandler = (e: number): void => {
     setStepType(e);
     setDisplaySelection(false);
   };
@@ -20,8 +21,10 @@ const StepTypeSelector = ({stepType, setStepType}: StepTypeSelectorProps) => {
   return (
     <>
       {!displaySelection ? (
-        <Pressable onPress={() => setDisplaySelection(true)}>
-          <AppText>{stepType}</AppText>
+        <Pressable
+          style={styles.selected}
+          onPress={() => setDisplaySelection(true)}>
+          <AppText style={{textAlign: 'center'}}>{stepParse(stepType)}</AppText>
         </Pressable>
       ) : (
         <View style={styles.selectionContainer}>
@@ -31,7 +34,7 @@ const StepTypeSelector = ({stepType, setStepType}: StepTypeSelectorProps) => {
                 key={i}
                 style={styles.selection}
                 onPress={() => pressHandler(e)}>
-                <AppText style={{textAlign: 'center'}}>{e}</AppText>
+                <AppText style={{textAlign: 'center'}}>{stepParse(e)}</AppText>
               </Pressable>
             );
           })}
@@ -45,18 +48,26 @@ export default StepTypeSelector;
 
 const styles = StyleSheet.create({
   selectionContainer: {
-    borderStyle: 'dotted',
-    borderWidth: 1,
     display: 'flex',
     flexDirection: 'row',
     flexWrap: 'wrap',
     justifyContent: 'space-around',
     alignItems: 'center',
+    backgroundColor: '#fcf3ec',
+  },
+  selected: {
+    paddingVertical: 10,
+    borderRadius: 10,
+    width: '30%',
+    alignSelf: 'center',
+    backgroundColor: '#fcf3ec',
   },
   selection: {
     flexBasis: '30%',
-    padding: 20,
+    paddingVertical: 10,
+    marginVertical: 8,
     borderWidth: 1,
     borderRadius: 10,
+    backgroundColor: 'white',
   },
 });

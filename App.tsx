@@ -16,7 +16,7 @@ import MainStack from './src/routes/MainStack';
 const App = () => {
   return (
     <>
-      <StatusBar barStyle="dark-content" backgroundColor="#0000" />
+      <StatusBar barStyle="dark-content" backgroundColor="#ffffff" />
       <NavigationContainer>
         <MainStack />
       </NavigationContainer>

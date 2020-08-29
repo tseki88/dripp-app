@@ -4,14 +4,15 @@ import {StepInterface} from '../utils/typeInterface';
 import TimeDisplay from './TimeDisplay';
 import AppText from './AppText';
 import globalStyle from '../styles/globalStyle';
+import stepParse from '../utils/stepParse';
 
-interface Expected {
+interface StepListProps {
   step: StepInterface;
   index: number;
 }
 
-const StepList = ({step, index}: Expected) => {
-  const {stepType, duration, notes = null} = step;
+const StepList = ({step, index}: StepListProps) => {
+  const {stepType, duration, notes, waterAmount} = step;
 
   return (
     <View style={styles.listItem}>
@@ -19,12 +20,19 @@ const StepList = ({step, index}: Expected) => {
         <AppText style={globalStyle.fontSmall}>{index + 1}</AppText>
       </View>
       <View style={styles.stepAppText}>
-        <AppText>{stepType}</AppText>
-        {notes ? (
+        <AppText>{stepParse(stepType)}</AppText>
+        {notes !== '' ? (
           <AppText style={globalStyle.fontSmall}>{notes}</AppText>
         ) : null}
       </View>
-      <TimeDisplay time={duration} />
+      <View>
+        <TimeDisplay time={duration} />
+        {waterAmount !== 0 && (
+          <AppText style={[globalStyle.fontSmall, {textAlign: 'right'}]}>
+            {waterAmount + ' g'}
+          </AppText>
+        )}
+      </View>
     </View>
   );
 };
@@ -39,14 +47,14 @@ const styles = StyleSheet.create({
     justifyContent: 'space-between',
     borderBottomWidth: StyleSheet.hairlineWidth,
     borderBottomColor: '#725034',
-    paddingVertical: 5,
+    paddingVertical: 8,
     paddingHorizontal: 5,
   },
   stepNumber: {
     borderWidth: 1,
-    borderRadius: 25,
-    width: 20,
-    height: 20,
+    borderRadius: 21,
+    width: 21,
+    height: 21,
     marginRight: 5,
     alignItems: 'center',
   },

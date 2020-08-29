@@ -1,9 +1,13 @@
 import React, {useState, useEffect} from 'react';
-import {StyleSheet, View, FlatList, Pressable, ScrollView} from 'react-native';
+import {StyleSheet, View, ScrollView, Pressable} from 'react-native';
+import {NavigationProp, RouteProp} from '@react-navigation/native';
 import {StepList, AppText, TimeDisplay, Card, Button} from '../components';
 import globalStyle from '../styles/globalStyle';
-import {MainStackParamList, StepInterface} from '../utils/typeInterface';
-import {NavigationProp, RouteProp} from '@react-navigation/native';
+import {
+  MainStackParamList,
+  StepInterface,
+  BrewMetricInterface,
+} from '../utils/typeInterface';
 import grindParse from '../utils/grindParse';
 
 type RecipeRouteProps = RouteProp<MainStackParamList, 'Recipe'>;
@@ -16,56 +20,99 @@ interface RecipeScreenProps {
 const RecipeScreen = ({navigation, route}: RecipeScreenProps) => {
   const [editMode, setEditMode] = useState(false);
 
-  const {brewType, name, metric, steps} = route.params;
+  const [brewTypeValue, setBrewTypeValue] = useState<number>(0);
+  const [nameValue, setNameValue] = useState<string>('');
+  const [metricObject, setMetricObject] = useState<BrewMetricInterface>({
+    coffeeGrind: 0,
+    coffeeWeight: 0,
+    waterWeight: 0,
+    waterTemp: 0,
+    ratio: 0,
+  });
+  // prevents page from jumping on load, when creating a new recipe an empty array is passed in
+  const [stepsArray, setStepsArray] = useState<StepInterface[]>(
+    route.params.steps,
+  );
 
-  const [stepsArray, setStepsArray] = useState<StepInterface[]>(steps);
+  useEffect(() => {
+    if (route.params.id) {
+      const {brewType, name, metric, steps} = route.params;
+
+      setBrewTypeValue(brewType);
+      setNameValue(name);
+      setMetricObject(metric);
+      setStepsArray(steps);
+    }
+  }, [route.params]);
 
   useEffect(() => {
     if (route.params?.newStep) {
-      setStepsArray((prev) => [...prev, route.params.newStep]);
+      const {newStep} = route.params;
+      let targetIndex: number;
+
+      const updateStepsArray = (modifiedStep: StepInterface): void => {
+        return setStepsArray((prev) => {
+          prev[targetIndex] = modifiedStep;
+          return [...prev];
+        });
+      };
+
+      let existing: boolean = stepsArray.some((e, i) => {
+        if (e.id === newStep.id) {
+          targetIndex = i;
+          return true;
+        }
+      });
+
+      // if id already exists, edit that particular one...?
+      existing
+        ? updateStepsArray(newStep)
+        : setStepsArray((prev) => [...prev, newStep]);
     }
   }, [route.params?.newStep]);
 
-  const totalTime = steps.reduce((a: number, b: StepInterface) => {
+  const totalTime = stepsArray.reduce((a: number, b: StepInterface): number => {
     return a + b.duration;
   }, 0);
 
   return (
-    <View style={globalStyle.wrapper}>
-      <Button
-        text={editMode ? 'Lock' : 'Edit'}
-        pressHandler={() => setEditMode((prev) => !prev)}
-      />
+    <ScrollView style={globalStyle.wrapper}>
       <View style={{flex: 1}}>
-        <View style={{display: 'flex', alignItems: 'center'}}>
-          <AppText>{brewType}</AppText>
-          <AppText>{name}</AppText>
+        <View
+          style={{display: 'flex', flexDirection: 'row', flexWrap: 'nowrap', marginVertical: 8}}>
+          <View style={{display: 'flex', alignItems: 'center', flex: 1}}>
+            {/* <AppText>{brewTypeValue}</AppText> */}
+            <AppText style={globalStyle.fontHeaderTwo}>{nameValue}</AppText>
+          </View>
+          <Pressable style={{paddingHorizontal: 10, paddingVertical: 2, borderWidth: 1}} onPress={() => setEditMode((prev) => !prev)}>
+            <AppText>{editMode ? 'Lock' : 'Edit'}</AppText>
+          </Pressable>
         </View>
         <View style={styles.metricsContainer}>
           <View style={styles.spaceBetween}>
             <Card label="Grind:">
-              <AppText>{grindParse(metric.coffeeGrind)}</AppText>
+              <AppText>{grindParse(metricObject.coffeeGrind)}</AppText>
             </Card>
             <Card label="Water Temp:" style={{alignItems: 'flex-end'}}>
-              <AppText>{metric.waterTemp} C</AppText>
+              <AppText>{metricObject.waterTemp} C</AppText>
             </Card>
           </View>
           <View style={styles.spaceBetween}>
             <Card label="Coffee:">
               <AppText
                 style={[globalStyle.fontHeaderTwo, {textAlign: 'center'}]}>
-                {metric.coffeeWeight} g
+                {metricObject.coffeeWeight} g
               </AppText>
             </Card>
             <Card label="Water:">
               <AppText
                 style={[globalStyle.fontHeaderTwo, {textAlign: 'center'}]}>
-                {metric.waterWeight} g
+                {metricObject.waterWeight} g
               </AppText>
             </Card>
           </View>
           <Card label="Ratio:" style={{alignItems: 'center'}}>
-            <AppText>1 : {metric.ratio}</AppText>
+            <AppText>1 : {metricObject.ratio}</AppText>
           </Card>
         </View>
       </View>
@@ -74,31 +121,38 @@ const RecipeScreen = ({navigation, route}: RecipeScreenProps) => {
           <AppText style={globalStyle.fontLabelSmall}>Steps:</AppText>
           <TimeDisplay time={totalTime} style={globalStyle.fontHeaderTwo} />
         </View>
-        <FlatList
-          data={stepsArray}
-          renderItem={({item, index}) => {
-            return <StepList step={item} index={index} />;
-          }}
-          keyExtractor={(item) => item.id.toString()}
-        />
+        {stepsArray.map((item, index) => {
+          return (
+            <Pressable
+              key={item.id.toString()}
+              onPress={
+                editMode ? () => navigation.navigate('StepEdit', item) : null
+              }
+              style={{backgroundColor: editMode ? '#fcf3ec' : undefined}}>
+              <StepList step={item} index={index} />
+            </Pressable>
+          );
+        })}
         {editMode ? (
           <Button
             text="Add Step"
-            pressHandler={() =>
-              // navigation.navigate('StepEdit', {
-              //   onGoBack: (item: StepInterface) =>
-              //     setStepsArray((prev) => [...prev, item]),
-              // })
-              navigation.navigate('StepEdit')
-            }
+            pressHandler={() => navigation.navigate('StepEdit')}
           />
         ) : null}
       </Card>
       <Button
         text="Get Brewin"
-        pressHandler={() => navigation.navigate('Timer', route.params)}
+        // need to collect 'most updated' steps list (in case they edited)
+        pressHandler={() =>
+          navigation.navigate('Timer', {
+            brewType: brewTypeValue,
+            name: nameValue,
+            metric: metricObject,
+            steps: stepsArray,
+          })
+        }
       />
-    </View>
+    </ScrollView>
   );
 };
 
@@ -109,6 +163,7 @@ const styles = StyleSheet.create({
     display: 'flex',
     flexDirection: 'row',
     justifyContent: 'space-between',
+    flex: 1,
   },
   metricsContainer: {
     flex: 1,

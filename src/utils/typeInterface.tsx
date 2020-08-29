@@ -4,11 +4,11 @@ export interface StepInterface {
   // step type to be based off number
   notes: string;
   duration: number;
-  targetWeight?: number;
+  waterAmount: number;
   // mandatory label when custom step?
 }
 
-export interface brewMetricInterface {
+export interface BrewMetricInterface {
   coffeeGrind: number;
   coffeeWeight: number;
   waterWeight: number;
@@ -21,7 +21,7 @@ export interface RecipeInterface {
   brewType: number;
   // for smaller local storage, brew types to be based off number
   name: string;
-  metric: brewMetricInterface;
+  metric: BrewMetricInterface;
   steps: StepInterface[];
 }
 
@@ -30,14 +30,14 @@ export type RecipePropInterface = {
   brewType: number;
   // for smaller local storage, brew types to be based off number
   name: string;
-  metric: brewMetricInterface;
+  metric: BrewMetricInterface;
   steps: StepInterface[];
-  newStep?: StepInterface
-}
+  newStep?: StepInterface;
+};
 
 export type MainStackParamList = {
   Home: undefined;
   Timer: RecipeInterface;
   Recipe: RecipePropInterface;
   StepEdit: StepInterface;
-}
+};

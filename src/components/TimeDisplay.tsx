@@ -1,6 +1,7 @@
 import React from 'react';
-import {Text} from 'react-native';
+// import {Text} from 'react-native';
 import AppText from './AppText';
+import { StyleSheet } from 'react-native';
 
 interface TimeInterface {
   time: number;
@@ -18,7 +19,7 @@ const TimeDisplay = ({time, style = {}}: TimeInterface) => {
   return (
     <AppText style={style}>
       {minutes < 10 ? '0' + minutes : minutes}
-      <Text> : </Text>
+      <AppText style={[styles.timeDisplay, style]}>:</AppText>
       {seconds < 10 ? '0' + seconds : seconds}
       {/* <Text> . </Text> */}
       {/* {tenMilliseconds} */}
@@ -27,3 +28,9 @@ const TimeDisplay = ({time, style = {}}: TimeInterface) => {
 };
 
 export default TimeDisplay;
+
+const styles = StyleSheet.create({
+  timeDisplay: {
+    letterSpacing: 4,
+  }
+})

@@ -2,8 +2,13 @@ import React, {useState} from 'react';
 import {StyleSheet, View, TextInput, Pressable} from 'react-native';
 import TimeDisplay from './TimeDisplay';
 
-const InputTime = () => {
-  const [duration, setDuration] = useState<number>(0);
+type InputTimeProps = {
+  duration: number;
+  setDuration: Function;
+};
+
+const InputTime = ({duration, setDuration}: InputTimeProps) => {
+  // const [duration, setDuration] = useState<number>(0);
   const [timeInputActive, setTimeInputActive] = useState<boolean>(false);
   const [input, setInput] = useState<number>(0);
 

@@ -1,11 +1,18 @@
 import React, {useState, useEffect} from 'react';
 import {StyleSheet, View, Vibration} from 'react-native';
-import {ProgressBar, AppText, Button, TimeDisplay} from '../components';
+import {
+  ProgressBar,
+  AppText,
+  Button,
+  TimeDisplay,
+  StepList,
+} from '../components';
 import globalStyle from '../styles/globalStyle';
 import useInterval from '../hooks/useInterval';
 
 import {MainStackParamList} from '../utils/typeInterface';
 import {NavigationProp, RouteProp} from '@react-navigation/native';
+import stepParse from '../utils/stepParse';
 
 type TimerRouteProps = RouteProp<MainStackParamList, 'Timer'>;
 
@@ -16,7 +23,6 @@ interface TimerScreenProps {
 
 // TODO: figure out ways to improve performance.
 const TimerScreen = ({route}: TimerScreenProps) => {
-  
   const [isRunning, setIsRunning] = useState<boolean>(false);
   const [now, setNow] = useState<number>(0);
   const [time, setTime] = useState<number>(0);
@@ -91,12 +97,11 @@ const TimerScreen = ({route}: TimerScreenProps) => {
     <View style={globalStyle.wrapper}>
       <View style={styles.displayContainer}>
         <View style={styles.displayProgress}>
+          {/* <AppText>Total</AppText> */}
+          <TimeDisplay time={time} />
           <ProgressBar numerator={stepSum - time} denominator={stepSum} />
         </View>
         <View style={styles.displayStepDetails}>
-          <AppText>Total</AppText>
-          <TimeDisplay time={time} />
-          <AppText>current</AppText>
           <TimeDisplay time={time - timerBreakpoint} />
           <View>
             <View style={{height: 160}}>
@@ -106,11 +111,14 @@ const TimerScreen = ({route}: TimerScreenProps) => {
               />
             </View>
             <AppText>Step: {stepIndex + 1}</AppText>
-            <AppText>{testRecipe[stepIndex].stepType}</AppText>
+            <AppText>{stepParse(testRecipe[stepIndex].stepType)}</AppText>
             {testRecipe[stepIndex].notes !== '' ? (
               <AppText>{testRecipe[stepIndex].notes}</AppText>
             ) : null}
           </View>
+          {stepIndex + 1 !== testRecipe.length ? (
+            <StepList step={testRecipe[stepIndex + 1]} index={stepIndex + 1} />
+          ) : null}
         </View>
       </View>
       <View style={styles.buttonContainer}>
@@ -137,15 +145,15 @@ export default TimerScreen;
 
 const styles = StyleSheet.create({
   displayContainer: {
-    flex: 5,
-    borderWidth: 1,
+    flex: 1,
+    // borderWidth: 1,
     display: 'flex',
     flexDirection: 'row',
     flexWrap: 'nowrap',
     justifyContent: 'space-between',
   },
   buttonContainer: {
-    flex: 1,
+    // flex: 1,
     display: 'flex',
     flexDirection: 'row',
     flexWrap: 'nowrap',
@@ -159,5 +167,7 @@ const styles = StyleSheet.create({
   },
   displayStepDetails: {
     flex: 4,
+    alignItems: 'center',
+    justifyContent: 'space-between',
   },
 });

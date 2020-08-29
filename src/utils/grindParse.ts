@@ -1,4 +1,4 @@
-const grindParse = (value: number) => {
+const grindParse = (value: number):string => {
   switch (value) {
     case 0:
       return 'Extra Coarse';
@@ -15,7 +15,7 @@ const grindParse = (value: number) => {
     case 6:
       return 'Extra Fine';
     default:
-      break;
+      return '-';
   }
 }
 
