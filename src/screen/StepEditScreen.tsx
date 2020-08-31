@@ -86,14 +86,7 @@ const StepEditScreen = ({navigation, route}: StepEditScreenProps) => {
           <InputTime duration={duration} setDuration={setDuration} />
         </Card>
         <Card label="Water Amount:" style={{flex: 0}}>
-          <View
-            style={{
-              display: 'flex',
-              flexWrap: 'nowrap',
-              flexDirection: 'row',
-              alignItems: 'center',
-              justifyContent: 'center',
-            }}>
+          <View style={styles.inputContainer}>
             <TextInput
               style={[globalStyle.fontBase, {borderWidth: 1}]}
               value={waterAmount.toString()}
@@ -104,7 +97,6 @@ const StepEditScreen = ({navigation, route}: StepEditScreenProps) => {
             <AppText>g</AppText>
           </View>
         </Card>
-        {/* </View> */}
         <Card label="Notes:">
           <View style={styles.noteContainer}>
             <TextInput
@@ -157,5 +149,12 @@ const styles = StyleSheet.create({
     borderColor: '#efefef',
     borderRadius: 10,
     textAlignVertical: 'top',
+  },
+  inputContainer: {
+    display: 'flex',
+    flexWrap: 'nowrap',
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'center',
   },
 });

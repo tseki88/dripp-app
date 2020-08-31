@@ -7,3 +7,4 @@ export {default as StepTypeSelector} from './StepTypeSelector';
 export {default as InputTime} from './InputTime';
 export {default as Card} from './Card';
 export {default as RecipeList} from './RecipeList';
+export {default as MetricEdit} from './MetricEdit';

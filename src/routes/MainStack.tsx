@@ -23,9 +23,13 @@ const MainStack = () => {
       <Stack.Screen
         name="Timer"
         component={TimerScreen}
-        options={{title: 'Timer', headerShown: false}}
+        options={{headerShown: false}}
       />
-      <Stack.Screen name="Recipe" component={RecipeScreen} />
+      <Stack.Screen
+        name="Recipe"
+        component={RecipeScreen}
+        options={{headerShown: false}}
+      />
       <Stack.Screen name="StepEdit" component={StepEditScreen} />
     </Stack.Navigator>
   );

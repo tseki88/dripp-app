@@ -30,10 +30,14 @@ const globalStyle = StyleSheet.create({
   },
   fontLabelSmall: {
     fontSize: actuatedNormalize(14),
+    fontFamily: 'Nunito-Bold',
     color: '#725034',
   },
   fontSmall: {
     fontSize: actuatedNormalize(15),
+  },
+  fontInput: {
+    fontSize: actuatedNormalize(22),
   },
 });
 

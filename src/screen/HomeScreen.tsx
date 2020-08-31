@@ -37,6 +37,7 @@ const HomeScreen = ({navigation}: HomeScreenProps) => {
         />
       </View>
       <Pressable
+        hitSlop={4}
         style={styles.newRecipeButton}
         onPress={() => navigation.navigate('Recipe', {steps: []})}>
         <AppText style={[globalStyle.fontHeaderOne, {color: '#ffffff'}]}>

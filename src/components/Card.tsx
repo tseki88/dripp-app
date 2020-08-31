@@ -1,5 +1,5 @@
 import React, {ReactNode} from 'react';
-import {StyleSheet, View} from 'react-native';
+import {StyleSheet, Pressable} from 'react-native';
 import globalStyle from '../styles/globalStyle';
 import AppText from './AppText';
 
@@ -7,16 +7,24 @@ interface CardProps {
   children: ReactNode;
   label?: string | null;
   style?: object | null;
+  onPress?: Function | null;
 }
 
-const Card = ({children, style = null, label = null}: CardProps) => {
+const Card = ({
+  children,
+  style = null,
+  label = null,
+  onPress = null,
+}: CardProps) => {
   return (
-    <View style={[styles.cardContainer, style]}>
+    <Pressable
+      onPress={onPress ? () => onPress() : null}
+      style={[styles.cardContainer, style]}>
       {label ? (
         <AppText style={[globalStyle.fontLabelSmall]}>{label}</AppText>
       ) : null}
       {children}
-    </View>
+    </Pressable>
   );
 };
 

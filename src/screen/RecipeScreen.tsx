@@ -1,7 +1,14 @@
 import React, {useState, useEffect} from 'react';
 import {StyleSheet, View, ScrollView, Pressable} from 'react-native';
 import {NavigationProp, RouteProp} from '@react-navigation/native';
-import {StepList, AppText, TimeDisplay, Card, Button} from '../components';
+import {
+  StepList,
+  AppText,
+  TimeDisplay,
+  Card,
+  Button,
+  MetricEdit,
+} from '../components';
 import globalStyle from '../styles/globalStyle';
 import {
   MainStackParamList,
@@ -27,7 +34,7 @@ const RecipeScreen = ({navigation, route}: RecipeScreenProps) => {
     coffeeWeight: 0,
     waterWeight: 0,
     waterTemp: 0,
-    ratio: 0,
+    ratio: 17.0,
   });
   // prevents page from jumping on load, when creating a new recipe an empty array is passed in
   const [stepsArray, setStepsArray] = useState<StepInterface[]>(
@@ -79,42 +86,65 @@ const RecipeScreen = ({navigation, route}: RecipeScreenProps) => {
     <ScrollView style={globalStyle.wrapper}>
       <View style={{flex: 1}}>
         <View
-          style={{display: 'flex', flexDirection: 'row', flexWrap: 'nowrap', marginVertical: 8}}>
+          style={{
+            display: 'flex',
+            flexDirection: 'row',
+            flexWrap: 'nowrap',
+            marginVertical: 8,
+            position: 'relative',
+          }}>
           <View style={{display: 'flex', alignItems: 'center', flex: 1}}>
             {/* <AppText>{brewTypeValue}</AppText> */}
             <AppText style={globalStyle.fontHeaderTwo}>{nameValue}</AppText>
           </View>
-          <Pressable style={{paddingHorizontal: 10, paddingVertical: 2, borderWidth: 1}} onPress={() => setEditMode((prev) => !prev)}>
+          <Pressable
+            style={{
+              alignItems: 'center',
+              width: 60,
+              paddingVertical: 2,
+              borderWidth: 1,
+              borderRadius: 30,
+              position: 'absolute',
+              right: 8,
+            }}
+            onPress={() => setEditMode((prev) => !prev)}>
             <AppText>{editMode ? 'Lock' : 'Edit'}</AppText>
           </Pressable>
         </View>
-        <View style={styles.metricsContainer}>
-          <View style={styles.spaceBetween}>
-            <Card label="Grind:">
-              <AppText>{grindParse(metricObject.coffeeGrind)}</AppText>
-            </Card>
-            <Card label="Water Temp:" style={{alignItems: 'flex-end'}}>
-              <AppText>{metricObject.waterTemp} C</AppText>
+        {editMode ? (
+          <MetricEdit
+            metricObject={metricObject}
+            setMetricObject={setMetricObject}
+          />
+        ) : (
+          <View style={styles.metricsContainer}>
+            <View style={styles.spaceBetween}>
+              <Card label="Grind:">
+                <AppText>{grindParse(metricObject.coffeeGrind)}</AppText>
+              </Card>
+              <Card label="Water Temp:" style={{alignItems: 'flex-end'}}>
+                <AppText>{metricObject.waterTemp} C</AppText>
+              </Card>
+            </View>
+            <View style={styles.spaceBetween}>
+              <Card label="Coffee:">
+                <AppText
+                  style={[globalStyle.fontHeaderTwo, {textAlign: 'center'}]}>
+                  {metricObject.coffeeWeight.toFixed(1)} g
+                </AppText>
+              </Card>
+              <Card label="Water:">
+                <AppText
+                  style={[globalStyle.fontHeaderTwo, {textAlign: 'center'}]}>
+                  {metricObject.waterWeight.toFixed(1)} g
+                </AppText>
+              </Card>
+            </View>
+            <Card label="Ratio:" style={{alignItems: 'center'}}>
+              <AppText>1 : {metricObject.ratio.toFixed(1)}</AppText>
             </Card>
           </View>
-          <View style={styles.spaceBetween}>
-            <Card label="Coffee:">
-              <AppText
-                style={[globalStyle.fontHeaderTwo, {textAlign: 'center'}]}>
-                {metricObject.coffeeWeight} g
-              </AppText>
-            </Card>
-            <Card label="Water:">
-              <AppText
-                style={[globalStyle.fontHeaderTwo, {textAlign: 'center'}]}>
-                {metricObject.waterWeight} g
-              </AppText>
-            </Card>
-          </View>
-          <Card label="Ratio:" style={{alignItems: 'center'}}>
-            <AppText>1 : {metricObject.ratio}</AppText>
-          </Card>
-        </View>
+        )}
       </View>
       <Card style={styles.stepListContainer}>
         <View style={styles.spaceBetween}>
@@ -170,5 +200,6 @@ const styles = StyleSheet.create({
   },
   stepListContainer: {
     flex: 1,
+    marginTop: 8,
   },
 });
