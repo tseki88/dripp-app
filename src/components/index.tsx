@@ -8,3 +8,4 @@ export {default as InputTime} from './InputTime';
 export {default as Card} from './Card';
 export {default as RecipeList} from './RecipeList';
 export {default as MetricEdit} from './MetricEdit';
+export {default as ModalSelect} from './ModalSelect';

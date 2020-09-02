@@ -20,6 +20,9 @@ const globalStyle = StyleSheet.create({
   fontSemiBold: {
     fontFamily: 'Nunito-SemiBold',
   },
+  fontBold: {
+    fontFamily: 'Nunito-Bold',
+  },
   fontHeaderOne: {
     fontSize: actuatedNormalize(32),
     fontFamily: 'Lato-Bold',

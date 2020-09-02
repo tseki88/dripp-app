@@ -6,6 +6,7 @@ import grindParse from '../utils/grindParse';
 import globalStyle from '../styles/globalStyle';
 import {BrewMetricInterface} from '../utils/typeInterface';
 import Slider from '@react-native-community/slider';
+import ModalSelect from './ModalSelect';
 
 type MetricEditProps = {
   metricObject: BrewMetricInterface;
@@ -28,6 +29,8 @@ const MetricEdit = ({metricObject, setMetricObject}: MetricEditProps) => {
   const [waterWeightValue, setWaterWeightValue] = useState<string>(waterWeight.toFixed(1));
   // const [waterInput, setWaterInput] = useState<string>(waterWeight.toFixed(1));
   const [ratioBaseCoffee, setRatioBaseCoffee] = useState<boolean>(true);
+  const [modalVisible, setModalVisible] = useState<boolean>(false);
+  const [coffeeGrindValue, setCoffeeGrindValue] = useState<number>(coffeeGrind);
 
   useEffect(() => {
     if (ratioBaseCoffee) {
@@ -42,10 +45,12 @@ const MetricEdit = ({metricObject, setMetricObject}: MetricEditProps) => {
   }, [waterWeightValue, coffeeWeightValue, ratioValue, ratioBaseCoffee]);
 
   const sliderHandler = (value: number): void => {
-    setRatioValue(value);
+    setRatioValue(() => value);
   };
 
   const sliderCompleteHandler = (value: number): void => {
+    // TODO: Ensure update values to current values.
+    setRatioValue(() => value);
     setMetricObject((prev: BrewMetricInterface) => {
       prev.ratio = ratioValue;
       prev.coffeeWeight = parseFloat(coffeeWeightValue);
@@ -72,15 +77,26 @@ const MetricEdit = ({metricObject, setMetricObject}: MetricEditProps) => {
     }
 
     ratioBaseCoffee
-      ? setCoffeeWeightValue(() => checkLeading.toString())
-      : setWaterWeightValue(() => checkLeading.toString());
+      ? // @ts-expect-error
+        setCoffeeWeightValue(() => checkLeading.toString())
+      : // @ts-expect-error
+        setWaterWeightValue(() => checkLeading.toString());
   };
 
   return (
     <View style={styles.metricsContainer}>
+      {/* needs to unmount in order to reset the scrollTo value */}
+      {modalVisible && (
+        <ModalSelect
+          coffeeGrindValue={coffeeGrindValue}
+          setCoffeeGrindValue={setCoffeeGrindValue}
+          modalVisible={modalVisible}
+          setModalVisible={setModalVisible}
+        />
+      )}
       <View style={styles.spaceBetween}>
-        <Card label="Grind:">
-          <AppText>{grindParse(coffeeGrind)}</AppText>
+        <Card onPress={() => setModalVisible(true)} label="Grind:">
+          <AppText>{grindParse(coffeeGrindValue)}</AppText>
         </Card>
         <Card label="Water Temp:" style={{alignItems: 'flex-end'}}>
           <AppText>{waterTemp} C</AppText>
@@ -89,6 +105,7 @@ const MetricEdit = ({metricObject, setMetricObject}: MetricEditProps) => {
       <View style={styles.spaceBetween}>
         <Card
           label="Coffee:"
+          // eslint-disable-next-line react-native/no-inline-styles
           style={{backgroundColor: ratioBaseCoffee ? 'darkgrey' : null}}
           onPress={() => setRatioBaseCoffee(true)}>
           <View style={styles.inputContainer}>
@@ -105,6 +122,7 @@ const MetricEdit = ({metricObject, setMetricObject}: MetricEditProps) => {
         </Card>
         <Card
           label="Water:"
+          // eslint-disable-next-line react-native/no-inline-styles
           style={{backgroundColor: ratioBaseCoffee ? null : 'darkgrey'}}
           onPress={() => setRatioBaseCoffee(false)}>
           <View style={styles.inputContainer}>
@@ -123,7 +141,7 @@ const MetricEdit = ({metricObject, setMetricObject}: MetricEditProps) => {
       <Card label="Ratio:" style={{alignItems: 'center'}}>
         <AppText>1 : {ratioValue.toFixed(1)}</AppText>
         <Slider
-          style={{width: '100%', height: 20}}
+          style={{width: '100%', height: 20, marginTop: 8}}
           minimumValue={14.0}
           maximumValue={20.0}
           step={0.1}
