@@ -65,7 +65,7 @@ const GrindSelector = ({
                 setIndexValue(Math.round(e.nativeEvent.contentOffset.y / 60))
               }
               fadingEdgeLength={120}>
-              {[0, 1, 2, 3, 4, 5, 6].map((e, i) => {
+              {Array.from({length: 7}).map((e, i) => {
                 return (
                   <View key={i} style={styles.listItem}>
                     <AppText style={globalStyle.fontHeaderTwo}>

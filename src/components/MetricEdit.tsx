@@ -35,6 +35,7 @@ const MetricEdit = ({metricObject, setMetricObject}: MetricEditProps) => {
   const [tempModalVisible, setTempModalVisible] = useState<boolean>(false);
   const [coffeeGrindValue, setCoffeeGrindValue] = useState<number>(coffeeGrind);
   const [waterTempValue, setWaterTempValue] = useState<number>(waterTemp);
+  const [tempCelsius, setTempCelsius] = useState<boolean>(false);
 
   useEffect(() => {
     if (ratioBaseCoffee) {
@@ -52,6 +53,17 @@ const MetricEdit = ({metricObject, setMetricObject}: MetricEditProps) => {
     setRatioValue(() => value);
   };
 
+  // ***this function needs to run on save changes
+  // useEffect(() => {
+  //   if (waterTemp !== waterTempValue) {
+  //     setMetricObject((prev: BrewMetricInterface) => {
+  //       prev.waterTemp = waterTempValue;
+  //       return {...prev};
+  //     });
+  //   }
+  // }, [waterTempValue, waterTemp]);
+
+  // ***this function needs to run on save changes
   const sliderCompleteHandler = (value: number): void => {
     // TODO: Ensure update values to current values.
     setRatioValue(() => value);
@@ -87,6 +99,19 @@ const MetricEdit = ({metricObject, setMetricObject}: MetricEditProps) => {
         setWaterWeightValue(() => checkLeading.toString());
   };
 
+  // data is stored in F, if tempCelsius is false, displayValue is dataValue + 32
+  // if tempCesius (user setting, global state?), displayValue is dataValue * 5 / 9
+
+  const calcTemp = (tempValue: number): string => {
+    let renderValue: number;
+
+    tempCelsius
+      ? (renderValue = Math.round((tempValue * 5) / 9))
+      : (renderValue = tempValue + 32);
+
+    return renderValue.toString();
+  };
+
   return (
     <View style={styles.metricsContainer}>
       {/* needs to unmount in order to reset the scrollTo value */}
@@ -104,6 +129,8 @@ const MetricEdit = ({metricObject, setMetricObject}: MetricEditProps) => {
           setWaterTempValue={setWaterTempValue}
           tempModalVisible={tempModalVisible}
           setTempModalVisible={setTempModalVisible}
+          tempCelsius={tempCelsius}
+          setTempCelsius={setTempCelsius}
         />
       )}
       <View style={styles.spaceBetween}>
@@ -114,7 +141,9 @@ const MetricEdit = ({metricObject, setMetricObject}: MetricEditProps) => {
           label="Water Temp:"
           onPress={() => setTempModalVisible(true)}
           style={{alignItems: 'flex-end'}}>
-          <AppText>{waterTempValue} C</AppText>
+          <AppText>
+            {calcTemp(waterTempValue)} {tempCelsius ? 'C' : 'F'}
+          </AppText>
         </Card>
       </View>
       <View style={styles.spaceBetween}>

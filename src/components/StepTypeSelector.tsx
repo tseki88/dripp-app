@@ -32,7 +32,7 @@ const StepTypeSelector = ({stepType, setStepType}: StepTypeSelectorProps) => {
             return (
               <Pressable
                 key={i}
-                style={styles.selection}
+                style={[styles.selection, stepType === e && styles.selected]}
                 onPress={() => pressHandler(e)}>
                 <AppText style={{textAlign: 'center'}}>{stepParse(e)}</AppText>
               </Pressable>
@@ -53,7 +53,7 @@ const styles = StyleSheet.create({
     flexWrap: 'wrap',
     justifyContent: 'space-around',
     alignItems: 'center',
-    backgroundColor: '#fcf3ec',
+    // backgroundColor: '#fcf3ec',
   },
   selected: {
     paddingVertical: 10,
