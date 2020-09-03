@@ -6,7 +6,9 @@ import grindParse from '../utils/grindParse';
 import globalStyle from '../styles/globalStyle';
 import {BrewMetricInterface} from '../utils/typeInterface';
 import Slider from '@react-native-community/slider';
-import ModalSelect from './ModalSelect';
+// import ModalSelect from './ModalSelect';
+import GrindSelector from './GrindSelector';
+import TempSelector from './TempSelector';
 
 type MetricEditProps = {
   metricObject: BrewMetricInterface;
@@ -30,7 +32,9 @@ const MetricEdit = ({metricObject, setMetricObject}: MetricEditProps) => {
   // const [waterInput, setWaterInput] = useState<string>(waterWeight.toFixed(1));
   const [ratioBaseCoffee, setRatioBaseCoffee] = useState<boolean>(true);
   const [modalVisible, setModalVisible] = useState<boolean>(false);
+  const [tempModalVisible, setTempModalVisible] = useState<boolean>(false);
   const [coffeeGrindValue, setCoffeeGrindValue] = useState<number>(coffeeGrind);
+  const [waterTempValue, setWaterTempValue] = useState<number>(waterTemp);
 
   useEffect(() => {
     if (ratioBaseCoffee) {
@@ -87,19 +91,30 @@ const MetricEdit = ({metricObject, setMetricObject}: MetricEditProps) => {
     <View style={styles.metricsContainer}>
       {/* needs to unmount in order to reset the scrollTo value */}
       {modalVisible && (
-        <ModalSelect
+        <GrindSelector
           coffeeGrindValue={coffeeGrindValue}
           setCoffeeGrindValue={setCoffeeGrindValue}
           modalVisible={modalVisible}
           setModalVisible={setModalVisible}
         />
       )}
+      {tempModalVisible && (
+        <TempSelector
+          waterTempValue={waterTempValue}
+          setWaterTempValue={setWaterTempValue}
+          tempModalVisible={tempModalVisible}
+          setTempModalVisible={setTempModalVisible}
+        />
+      )}
       <View style={styles.spaceBetween}>
         <Card onPress={() => setModalVisible(true)} label="Grind:">
           <AppText>{grindParse(coffeeGrindValue)}</AppText>
         </Card>
-        <Card label="Water Temp:" style={{alignItems: 'flex-end'}}>
-          <AppText>{waterTemp} C</AppText>
+        <Card
+          label="Water Temp:"
+          onPress={() => setTempModalVisible(true)}
+          style={{alignItems: 'flex-end'}}>
+          <AppText>{waterTempValue} C</AppText>
         </Card>
       </View>
       <View style={styles.spaceBetween}>

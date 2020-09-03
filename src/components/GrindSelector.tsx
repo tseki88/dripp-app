@@ -4,19 +4,19 @@ import grindParse from '../utils/grindParse';
 import AppText from './AppText';
 import globalStyle from '../styles/globalStyle';
 
-type ModalSelectProps = {
+type GrindSelectorProps = {
   modalVisible: boolean;
   setModalVisible: Function;
   coffeeGrindValue: number;
   setCoffeeGrindValue: Function;
 };
 
-const ModalSelect = ({
+const GrindSelector = ({
   modalVisible,
   setModalVisible,
   coffeeGrindValue,
   setCoffeeGrindValue,
-}: ModalSelectProps) => {
+}: GrindSelectorProps) => {
   const [indexValue, setIndexValue] = useState<number>(coffeeGrindValue);
 
   const scrollViewRef = useRef(null);
@@ -88,7 +88,7 @@ const ModalSelect = ({
   );
 };
 
-export default ModalSelect;
+export default GrindSelector;
 
 const styles = StyleSheet.create({
   relative: {
@@ -107,7 +107,7 @@ const styles = StyleSheet.create({
     opacity: 0.6,
   },
   innerContainer: {
-    paddingHorizontal: 20,
+    paddingHorizontal: 16,
     paddingVertical: 10,
     width: '80%',
     backgroundColor: 'white',
@@ -127,15 +127,18 @@ const styles = StyleSheet.create({
     flexGrow: 1,
     justifyContent: 'center',
     paddingVertical: 30,
+    borderLeftWidth: 1,
+    borderRightWidth: 1,
   },
   listItem: {
+    paddingHorizontal: 20,
     height: 60,
     alignItems: 'center',
     justifyContent: 'center',
   },
   confirmButton: {
     paddingHorizontal: 20,
-    paddingVertical: 8,
+    paddingVertical: 16,
     alignSelf: 'flex-end',
   },
 });
