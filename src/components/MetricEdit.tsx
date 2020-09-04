@@ -114,25 +114,20 @@ const MetricEdit = ({metricObject, setMetricObject}: MetricEditProps) => {
 
   return (
     <View style={styles.metricsContainer}>
-      {/* needs to unmount in order to reset the scrollTo value */}
-      {modalVisible && (
-        <GrindSelector
-          coffeeGrindValue={coffeeGrindValue}
-          setCoffeeGrindValue={setCoffeeGrindValue}
-          modalVisible={modalVisible}
-          setModalVisible={setModalVisible}
-        />
-      )}
-      {tempModalVisible && (
-        <TempSelector
-          waterTempValue={waterTempValue}
-          setWaterTempValue={setWaterTempValue}
-          tempModalVisible={tempModalVisible}
-          setTempModalVisible={setTempModalVisible}
-          tempCelsius={tempCelsius}
-          setTempCelsius={setTempCelsius}
-        />
-      )}
+      <GrindSelector
+        coffeeGrindValue={coffeeGrindValue}
+        setCoffeeGrindValue={setCoffeeGrindValue}
+        modalVisible={modalVisible}
+        setModalVisible={setModalVisible}
+      />
+      <TempSelector
+        waterTempValue={waterTempValue}
+        setWaterTempValue={setWaterTempValue}
+        tempModalVisible={tempModalVisible}
+        setTempModalVisible={setTempModalVisible}
+        tempCelsius={tempCelsius}
+        setTempCelsius={setTempCelsius}
+      />
       <View style={styles.spaceBetween}>
         <Card onPress={() => setModalVisible(true)} label="Grind:">
           <AppText>{grindParse(coffeeGrindValue)}</AppText>

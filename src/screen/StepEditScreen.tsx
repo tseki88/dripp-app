@@ -80,23 +80,25 @@ const StepEditScreen = ({navigation, route}: StepEditScreenProps) => {
         onPress={() => Keyboard.dismiss()}>
         <Card label="Step:" style={{flex: 0}}>
           <StepTypeSelector stepType={stepType} setStepType={setStepType} />
-          {/* if Custom Step, provide label input field */}
+          {/* stretch goal: if Custom Step, provide label input field */}
         </Card>
-        <Card label="Duration:" style={{flex: 0}}>
-          <InputTime duration={duration} setDuration={setDuration} />
-        </Card>
-        <Card label="Water Amount:" style={{flex: 0}}>
-          <View style={styles.inputContainer}>
-            <TextInput
-              style={[globalStyle.fontBase, {borderWidth: 1}]}
-              value={waterAmount.toString()}
-              onChangeText={(e) => waterInputHandler(e)}
-              keyboardType="number-pad"
-              caretHidden={true}
-            />
-            <AppText>g</AppText>
-          </View>
-        </Card>
+        <View style={styles.flexRow}>
+          <Card label="Duration:">
+            <InputTime duration={duration} setDuration={setDuration} />
+          </Card>
+          <Card label="Water Amount:">
+            <View style={styles.inputContainer}>
+              <TextInput
+                style={[globalStyle.fontBase, {borderWidth: 1}]}
+                value={waterAmount.toString()}
+                onChangeText={(e) => waterInputHandler(e)}
+                keyboardType="number-pad"
+                caretHidden={true}
+              />
+              <AppText>g</AppText>
+            </View>
+          </Card>
+        </View>
         <Card label="Notes:">
           <View style={styles.noteContainer}>
             <TextInput
@@ -156,5 +158,11 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     alignItems: 'center',
     justifyContent: 'center',
+  },
+  flexRow: {
+    display: 'flex',
+    flexDirection: 'row',
+    flexWrap: 'nowrap',
+    justifyContent: 'space-between',
   },
 });

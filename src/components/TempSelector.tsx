@@ -52,7 +52,7 @@ const TempSelector = ({
         });
       }
     }, 1);
-  }, [waterTempValue]);
+  }, [waterTempValue, tempModalVisible]);
 
   useEffect(() => {
     setTimeout(() => {

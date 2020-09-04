@@ -36,7 +36,7 @@ const GrindSelector = ({
         });
       }
     }, 10);
-  }, [coffeeGrindValue]);
+  }, [coffeeGrindValue, modalVisible]);
 
   return (
     <Modal
