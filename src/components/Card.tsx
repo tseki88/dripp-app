@@ -7,18 +7,19 @@ interface CardProps {
   children: ReactNode;
   label?: string | null;
   style?: object | null;
-  onPress?: Function | null;
+  onPress?: Function | undefined;
 }
 
 const Card = ({
   children,
   style = null,
   label = null,
-  onPress = null,
+  onPress = undefined,
 }: CardProps) => {
   return (
     <Pressable
-      onPress={onPress ? () => onPress() : null}
+      onPress={onPress ? () => onPress() : undefined}
+      disabled={onPress ? false : true}
       style={[styles.cardContainer, style]}>
       {label ? (
         <AppText style={[globalStyle.fontLabelSmall]}>{label}</AppText>

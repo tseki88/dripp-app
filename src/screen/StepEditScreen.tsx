@@ -6,6 +6,9 @@ import {
   Pressable,
   Keyboard,
   KeyboardAvoidingView,
+  NativeSyntheticEvent,
+  TextInputChangeEventData,
+  TextInputKeyPressEventData,
 } from 'react-native';
 import globalStyle from '../styles/globalStyle';
 import {
@@ -28,16 +31,20 @@ type StepEditScreenProps = {
 const StepEditScreen = ({navigation, route}: StepEditScreenProps) => {
   const [stepType, setStepType] = useState<number>(0);
   const [duration, setDuration] = useState<number>(0);
-  const [waterAmount, setWaterAmount] = useState<number>(0);
+  const [waterAmount, setWaterAmount] = useState<string>('0');
   const [note, setNote] = useState<string>('');
 
   const [noteCount, setNoteCount] = useState<number>(0);
+
+  const [waterFocused, setWaterFocused] = useState<boolean>(false);
 
   useEffect((): void => {
     if (route.params) {
       setStepType(route.params.stepType);
       setDuration(route.params.duration);
-      setWaterAmount(route.params.waterAmount);
+      if (route.params.waterAmount !== 0) {
+        setWaterAmount(route.params.waterAmount.toFixed(1));
+      }
       setNote(route.params.notes);
       setNoteCount(route.params.notes.length);
     }
@@ -52,13 +59,22 @@ const StepEditScreen = ({navigation, route}: StepEditScreenProps) => {
     }
     // get entered data and return to previous screen (recipe overview)
 
+    // remove any empty rows
+    let finalNoteValue: string = note;
+    if (note.includes('\n')) {
+      const notevalidation = note.split('\n').filter((e) => {
+        return e.trim() !== '';
+      });
+      finalNoteValue = notevalidation.join('\n');
+    }
+
     navigation.navigate('Recipe', {
       newStep: {
         id: timeStampId,
         stepType: stepType,
         duration: duration,
-        notes: note,
-        waterAmount: waterAmount,
+        notes: finalNoteValue,
+        waterAmount: parseFloat(waterAmount),
       },
     });
   };
@@ -68,9 +84,40 @@ const StepEditScreen = ({navigation, route}: StepEditScreenProps) => {
     setNoteCount(e.length);
   };
 
-  const waterInputHandler = (e: string): void => {
-    const intConvert = parseFloat(e);
-    setWaterAmount(intConvert);
+  const backspaceHandler = (
+    e: NativeSyntheticEvent<TextInputKeyPressEventData>,
+  ): void => {
+    if (e.nativeEvent.key === 'Backspace' && waterAmount !== '0') {
+      e.preventDefault();
+      const stringArray = waterAmount.split('');
+      stringArray.pop();
+      const updatedValue = stringArray.join('');
+      setWaterAmount(() => updatedValue);
+    }
+  };
+
+  const waterInputChangeHandler = (
+    e: NativeSyntheticEvent<TextInputChangeEventData>,
+  ): void => {
+    e.preventDefault();
+    const value = e.nativeEvent.text;
+    const finalValidation = /(^(0|[1-9][0-9]*)?\.+?\d?)|(^(0|[1-9][0-9]*))/gim;
+    let nullProof = value;
+    let checkLeading: RegExpMatchArray | null;
+
+    if (value[1] !== '.' && value[1] !== undefined && value[0] === '0') {
+      nullProof = value[1];
+    } else if (value === undefined || value === '') {
+      nullProof = '0';
+    }
+
+    checkLeading = nullProof.match(finalValidation);
+
+    if (checkLeading === null || checkLeading === undefined) {
+      checkLeading = [''];
+    }
+
+    setWaterAmount(checkLeading.toString());
   };
 
   return (
@@ -88,14 +135,29 @@ const StepEditScreen = ({navigation, route}: StepEditScreenProps) => {
           </Card>
           <Card label="Water Amount:">
             <View style={styles.inputContainer}>
-              <TextInput
-                style={[globalStyle.fontBase, {borderWidth: 1}]}
-                value={waterAmount.toString()}
-                onChangeText={(e) => waterInputHandler(e)}
-                keyboardType="number-pad"
-                caretHidden={true}
-              />
-              <AppText>g</AppText>
+              <View
+                style={{
+                  flex: 1,
+                  borderBottomWidth: 1,
+                  borderColor: waterFocused ? 'blue' : 'transparent',
+                }}>
+                <View style={{flex: 1, position: 'relative'}}>
+                  <TextInput
+                    style={[globalStyle.fontInput, styles.inputAbsolute]}
+                    value={waterAmount}
+                    onKeyPress={(e) => backspaceHandler(e)}
+                    onChange={(e) => waterInputChangeHandler(e)}
+                    keyboardType="numeric"
+                    onFocus={() => setWaterFocused(true)}
+                    onBlur={() => setWaterFocused(false)}
+                  />
+                  <AppText
+                    style={[globalStyle.fontInput, {textAlign: 'center'}]}>
+                    {waterAmount}
+                  </AppText>
+                </View>
+              </View>
+              <AppText style={globalStyle.fontInput}> g</AppText>
             </View>
           </Card>
         </View>
@@ -164,5 +226,16 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     flexWrap: 'nowrap',
     justifyContent: 'space-between',
+  },
+  inputAbsolute: {
+    position: 'absolute',
+    opacity: 0,
+    zIndex: 10,
+    padding: 0,
+    top: 0,
+    bottom: 0,
+    textAlign: 'center',
+    left: 0,
+    right: 0,
   },
 });
