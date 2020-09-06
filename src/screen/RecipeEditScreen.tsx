@@ -15,17 +15,15 @@ import {
   StepInterface,
   BrewMetricInterface,
 } from '../utils/typeInterface';
-import grindParse from '../utils/grindParse';
 
-type RecipeRouteProps = RouteProp<MainStackParamList, 'Recipe'>;
+type RecipeRouteProps = RouteProp<MainStackParamList, 'RecipeEdit'>;
 
-interface RecipeScreenProps {
+interface RecipeViewScreenProps {
   navigation: NavigationProp<any, any>;
   route: RecipeRouteProps;
 }
 
-const RecipeScreen = ({navigation, route}: RecipeScreenProps) => {
-  const [editMode, setEditMode] = useState(false);
+const RecipeEditScreen = ({navigation, route}: RecipeViewScreenProps) => {
 
   const [brewTypeValue, setBrewTypeValue] = useState<number>(0);
   const [nameValue, setNameValue] = useState<string>('');
@@ -33,7 +31,8 @@ const RecipeScreen = ({navigation, route}: RecipeScreenProps) => {
     coffeeGrind: 0,
     coffeeWeight: 0,
     waterWeight: 0,
-    waterTemp: 0,
+    waterTemp: 173,
+    // Maybe not have a ratio value, and calculate on render
     ratio: 17.0,
   });
   // prevents page from jumping on load, when creating a new recipe an empty array is passed in
@@ -42,12 +41,12 @@ const RecipeScreen = ({navigation, route}: RecipeScreenProps) => {
   );
 
   useEffect(() => {
-    if (route.params.id) {
+    if (route.params?.id) {
       const {brewType, name, metric, steps} = route.params;
 
       setBrewTypeValue(brewType);
       setNameValue(name);
-      setMetricObject(metric);
+      setMetricObject(() => metric);
       setStepsArray(steps);
     }
   }, [route.params]);
@@ -94,57 +93,14 @@ const RecipeScreen = ({navigation, route}: RecipeScreenProps) => {
             position: 'relative',
           }}>
           <View style={{display: 'flex', alignItems: 'center', flex: 1}}>
-            {/* <AppText>{brewTypeValue}</AppText> */}
+            <AppText>{brewTypeValue}</AppText>
             <AppText style={globalStyle.fontHeaderTwo}>{nameValue}</AppText>
           </View>
-          <Pressable
-            style={{
-              alignItems: 'center',
-              width: 60,
-              paddingVertical: 2,
-              borderWidth: 1,
-              borderRadius: 30,
-              position: 'absolute',
-              right: 8,
-            }}
-            onPress={() => setEditMode((prev) => !prev)}>
-            <AppText>{editMode ? 'Lock' : 'Edit'}</AppText>
-          </Pressable>
         </View>
-        {editMode ? (
-          <MetricEdit
-            metricObject={metricObject}
-            setMetricObject={setMetricObject}
-          />
-        ) : (
-          <View style={styles.metricsContainer}>
-            <View style={styles.spaceBetween}>
-              <Card label="Grind:">
-                <AppText>{grindParse(metricObject.coffeeGrind)}</AppText>
-              </Card>
-              <Card label="Water Temp:" style={{alignItems: 'flex-end'}}>
-                <AppText>{metricObject.waterTemp} C</AppText>
-              </Card>
-            </View>
-            <View style={styles.spaceBetween}>
-              <Card label="Coffee:">
-                <AppText
-                  style={[globalStyle.fontHeaderTwo, {textAlign: 'center'}]}>
-                  {metricObject.coffeeWeight.toFixed(1)} g
-                </AppText>
-              </Card>
-              <Card label="Water:">
-                <AppText
-                  style={[globalStyle.fontHeaderTwo, {textAlign: 'center'}]}>
-                  {metricObject.waterWeight.toFixed(1)} g
-                </AppText>
-              </Card>
-            </View>
-            <Card label="Ratio:" style={{alignItems: 'center'}}>
-              <AppText>1 : {metricObject.ratio.toFixed(1)}</AppText>
-            </Card>
-          </View>
-        )}
+        <MetricEdit
+          metricObject={metricObject}
+          setMetricObject={setMetricObject}
+        />
       </View>
       <Card style={styles.stepListContainer}>
         <View style={styles.spaceBetween}>
@@ -155,38 +111,21 @@ const RecipeScreen = ({navigation, route}: RecipeScreenProps) => {
           return (
             <Pressable
               key={item.id.toString()}
-              onPress={
-                editMode ? () => navigation.navigate('StepEdit', item) : null
-              }
-              style={{backgroundColor: editMode ? '#fcf3ec' : undefined}}>
+              onPress={() => navigation.navigate('StepEdit', item)}>
               <StepList step={item} index={index} />
             </Pressable>
           );
         })}
-        {editMode ? (
-          <Button
-            text="Add Step"
-            pressHandler={() => navigation.navigate('StepEdit')}
-          />
-        ) : null}
+        <Button
+          text="Add Step"
+          pressHandler={() => navigation.navigate('StepEdit')}
+        />
       </Card>
-      <Button
-        text="Get Brewin"
-        // need to collect 'most updated' steps list (in case they edited)
-        pressHandler={() =>
-          navigation.navigate('Timer', {
-            brewType: brewTypeValue,
-            name: nameValue,
-            metric: metricObject,
-            steps: stepsArray,
-          })
-        }
-      />
     </ScrollView>
   );
 };
 
-export default RecipeScreen;
+export default RecipeEditScreen;
 
 const styles = StyleSheet.create({
   spaceBetween: {

@@ -24,6 +24,9 @@ const MetricEdit = ({metricObject, setMetricObject}: MetricEditProps) => {
     waterTemp,
   } = metricObject;
 
+  // Needs to update on load
+  // const [metricObjectState, setMetricObjectState] = useState(metricObject);
+
   const [ratioValue, setRatioValue] = useState<number>(ratio);
   // eslint-disable-next-line prettier/prettier
   const [coffeeWeightValue, setCoffeeWeightValue] = useState<string>(coffeeWeight.toFixed(1));

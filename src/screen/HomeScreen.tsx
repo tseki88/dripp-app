@@ -10,6 +10,8 @@ type HomeScreenProps = {
 };
 
 const HomeScreen = ({navigation}: HomeScreenProps) => {
+  // TODO: Figure out way to have user's recipe data array for access
+
   return (
     <View
       style={[
@@ -26,20 +28,20 @@ const HomeScreen = ({navigation}: HomeScreenProps) => {
         <RecipeList
           recipe={sampleData.recipe[0]}
           pressHandler={() =>
-            navigation.navigate('Recipe', sampleData.recipe[0])
+            navigation.navigate('RecipeView', sampleData.recipe[0])
           }
         />
         <RecipeList
           recipe={sampleData.recipe[1]}
           pressHandler={() =>
-            navigation.navigate('Recipe', sampleData.recipe[1])
+            navigation.navigate('RecipeView', sampleData.recipe[1])
           }
         />
       </View>
       <Pressable
         hitSlop={4}
         style={styles.newRecipeButton}
-        onPress={() => navigation.navigate('Recipe', {steps: []})}>
+        onPress={() => navigation.navigate('RecipeEdit', {steps: []})}>
         <AppText style={[globalStyle.fontHeaderOne, {color: '#ffffff'}]}>
           +
         </AppText>

@@ -68,7 +68,7 @@ const StepEditScreen = ({navigation, route}: StepEditScreenProps) => {
       finalNoteValue = notevalidation.join('\n');
     }
 
-    navigation.navigate('Recipe', {
+    navigation.navigate('RecipeEdit', {
       newStep: {
         id: timeStampId,
         stepType: stepType,
