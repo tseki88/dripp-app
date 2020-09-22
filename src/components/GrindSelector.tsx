@@ -9,6 +9,7 @@ type GrindSelectorProps = {
   setModalVisible: Function;
   coffeeGrindValue: number;
   setCoffeeGrindValue: Function;
+  updateMetricObjectHandler: Function;
 };
 
 const GrindSelector = ({
@@ -16,6 +17,7 @@ const GrindSelector = ({
   setModalVisible,
   coffeeGrindValue,
   setCoffeeGrindValue,
+  updateMetricObjectHandler,
 }: GrindSelectorProps) => {
   const [indexValue, setIndexValue] = useState<number>(coffeeGrindValue);
 
@@ -24,6 +26,7 @@ const GrindSelector = ({
   const updateValueHandler = () => {
     setCoffeeGrindValue(indexValue);
     setModalVisible(false);
+    updateMetricObjectHandler('coffeeGrind', indexValue);
   };
 
   useEffect(() => {

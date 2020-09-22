@@ -7,9 +7,9 @@
       "metric": {
         "coffeeGrind": 2,
         "coffeeWeight": 12,
-        "waterTemp": 97,
+        "waterTemp": 142,
         "waterWeight": 200,
-        "ratio": 13.9
+        "ratio": 16.8
       },
       "steps": [
         {
@@ -70,9 +70,9 @@
       "metric": {
         "coffeeGrind": 5,
         "coffeeWeight": 13,
-        "waterTemp": 99,
+        "waterTemp": 120,
         "waterWeight": 240,
-        "ratio": 13.2
+        "ratio": 18.4
       },
       "steps": [
         {

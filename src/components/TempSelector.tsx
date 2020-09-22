@@ -10,6 +10,7 @@ type TempSelectorProps = {
   setWaterTempValue: Function;
   tempCelsius: boolean;
   setTempCelsius: Function;
+  updateMetricObjectHandler: Function;
 };
 
 const TempSelector = ({
@@ -19,6 +20,7 @@ const TempSelector = ({
   setWaterTempValue,
   tempCelsius,
   setTempCelsius,
+  updateMetricObjectHandler,
 }: TempSelectorProps) => {
   const [indexValue, setIndexValue] = useState<number>(
     tempCelsius ? Math.round((waterTempValue * 5) / 9) : waterTempValue,
@@ -26,7 +28,7 @@ const TempSelector = ({
   const [tempCelsiusValue, setTempCelsiusValue] = useState<boolean>(
     tempCelsius,
   );
-  // const [arrayRange, setArrayRange] = useState(Array.from({length: 181}));
+
   const celsiusRef = useRef(null);
   const fahrenheitRef = useRef(null);
 
@@ -35,9 +37,10 @@ const TempSelector = ({
       ? Math.round((indexValue * 9) / 5)
       : indexValue;
 
-    setWaterTempValue(tempDataValidation);
+    setWaterTempValue(() => tempDataValidation);
     setTempCelsius(tempCelsiusValue);
     setTempModalVisible(false);
+    updateMetricObjectHandler('waterTemp', tempDataValidation);
   };
 
   useEffect(() => {
@@ -47,12 +50,16 @@ const TempSelector = ({
       if (target.current !== null) {
         // @ts-expect-error -not null, inside null check
         target.current.scrollToIndex({
-          index: indexValue,
+          index: tempCelsiusValue
+            ? Math.round((waterTempValue * 5) / 9)
+            : waterTempValue,
           animated: false,
         });
       }
     }, 1);
   }, [waterTempValue, tempModalVisible]);
+
+  // Not setting 
 
   useEffect(() => {
     setTimeout(() => {
@@ -66,7 +73,7 @@ const TempSelector = ({
         });
       }
     }, 1);
-  }, [tempCelsiusValue]);
+  }, [tempCelsiusValue, indexValue]);
 
   // store F value as data (without +32), local storage check on user setting
   const celsiusRange = Array.from({length: 101});

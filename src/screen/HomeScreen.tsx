@@ -41,7 +41,19 @@ const HomeScreen = ({navigation}: HomeScreenProps) => {
       <Pressable
         hitSlop={4}
         style={styles.newRecipeButton}
-        onPress={() => navigation.navigate('RecipeEdit', {steps: []})}>
+        onPress={() =>
+          navigation.navigate('RecipeEdit', {
+            steps: [],
+            metric: {
+              coffeeGrind: 0,
+              coffeeWeight: 0,
+              waterWeight: 0,
+              waterTemp: 173,
+              // Maybe not have a ratio value, and calculate on render
+              ratio: 17.0,
+            },
+          })
+        }>
         <AppText style={[globalStyle.fontHeaderOne, {color: '#ffffff'}]}>
           +
         </AppText>

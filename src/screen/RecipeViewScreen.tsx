@@ -5,6 +5,7 @@ import {StepList, AppText, TimeDisplay, Card, Button} from '../components';
 import globalStyle from '../styles/globalStyle';
 import {MainStackParamList, StepInterface} from '../utils/typeInterface';
 import grindParse from '../utils/grindParse';
+import calcTemp from '../utils/calcTemp';
 
 type RecipeRouteProps = RouteProp<MainStackParamList, 'RecipeView'>;
 
@@ -43,7 +44,9 @@ const RecipeViewScreen = ({navigation, route}: RecipeViewScreenProps) => {
               borderWidth: 2,
               borderRadius: 10,
             }}
-            onPress={() => navigation.navigate('RecipeEdit', route.params)}>
+            onPress={() =>
+              navigation.navigate('RecipeEdit', {...route.params})
+            }>
             <AppText>Edit</AppText>
           </Pressable>
         </View>
@@ -53,7 +56,7 @@ const RecipeViewScreen = ({navigation, route}: RecipeViewScreenProps) => {
               <AppText>{grindParse(metric.coffeeGrind)}</AppText>
             </Card>
             <Card label="Water Temp:" style={{alignItems: 'flex-end'}}>
-              <AppText>{metric.waterTemp} C</AppText>
+              <AppText>{calcTemp(metric.waterTemp, false)} F</AppText>
             </Card>
           </View>
           <View style={styles.spaceBetween}>

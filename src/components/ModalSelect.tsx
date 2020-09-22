@@ -49,8 +49,9 @@ const ModalSelect = ({
       <View style={styles.relative}>
         <Pressable
           onPress={() => setModalVisible(false)}
-          style={styles.absolute}
-        />
+          style={styles.absolute}>
+          <View />
+        </Pressable>
         <View style={styles.innerContainer}>
           <View style={styles.scrollContainer}>
             <ScrollView

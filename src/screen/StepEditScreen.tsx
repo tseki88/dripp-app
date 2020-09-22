@@ -186,7 +186,10 @@ const StepEditScreen = ({navigation, route}: StepEditScreenProps) => {
             </View>
           </View>
         </Card>
-        <Button text="Add Step" pressHandler={addStepHandler} />
+        <Button
+          text={route.params ? 'Edit Step' : 'Add Step'}
+          pressHandler={addStepHandler}
+        />
       </Pressable>
     </KeyboardAvoidingView>
   );
