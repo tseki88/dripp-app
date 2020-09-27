@@ -11,3 +11,4 @@ export {default as MetricEdit} from './MetricEdit';
 export {default as ModalSelect} from './ModalSelect';
 export {default as GrindSelector} from './GrindSelector';
 export {default as TempSelector} from './TempSelector';
+export {default as TimeSelector} from './TimeSelector';

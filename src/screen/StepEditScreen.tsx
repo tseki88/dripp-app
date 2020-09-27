@@ -14,9 +14,10 @@ import globalStyle from '../styles/globalStyle';
 import {
   AppText,
   StepTypeSelector,
-  InputTime,
   Card,
   Button,
+  TimeSelector,
+  TimeDisplay,
 } from '../components';
 import {NavigationProp, RouteProp} from '@react-navigation/native';
 import {MainStackParamList} from '../utils/typeInterface';
@@ -33,6 +34,7 @@ const StepEditScreen = ({navigation, route}: StepEditScreenProps) => {
   const [duration, setDuration] = useState<number>(0);
   const [waterAmount, setWaterAmount] = useState<string>('0');
   const [note, setNote] = useState<string>('');
+  const [timeModalVisible, setTimeModalVisible] = useState<boolean>(false);
 
   const [noteCount, setNoteCount] = useState<number>(0);
 
@@ -84,21 +86,10 @@ const StepEditScreen = ({navigation, route}: StepEditScreenProps) => {
     setNoteCount(e.length);
   };
 
-  const backspaceHandler = (
-    e: NativeSyntheticEvent<TextInputKeyPressEventData>,
-  ): void => {
-    if (e.nativeEvent.key === 'Backspace' && waterAmount !== '0') {
-      e.preventDefault();
-      const stringArray = waterAmount.split('');
-      stringArray.pop();
-      const updatedValue = stringArray.join('');
-      setWaterAmount(() => updatedValue);
-    }
-  };
-
   const waterInputChangeHandler = (
     e: NativeSyntheticEvent<TextInputChangeEventData>,
   ): void => {
+    // TODO: Turn this into a utility function, as MetricEdit also uses this.
     e.preventDefault();
     const value = e.nativeEvent.text;
     const finalValidation = /(^(0|[1-9][0-9]*)?\.+?\d?)|(^(0|[1-9][0-9]*))/gim;
@@ -130,8 +121,15 @@ const StepEditScreen = ({navigation, route}: StepEditScreenProps) => {
           {/* stretch goal: if Custom Step, provide label input field */}
         </Card>
         <View style={styles.flexRow}>
-          <Card label="Duration:">
-            <InputTime duration={duration} setDuration={setDuration} />
+          <Card label="Duration:" onPress={() => setTimeModalVisible(true)}>
+            <TimeSelector
+              timeModalVisible={timeModalVisible}
+              setTimeModalVisible={setTimeModalVisible}
+              duration={duration}
+              setDuration={setDuration}
+            />
+            <TimeDisplay time={duration} />
+            {/* <InputTime duration={duration} setDuration={setDuration} /> */}
           </Card>
           <Card label="Water Amount:">
             <View style={styles.inputContainer}>
@@ -143,18 +141,13 @@ const StepEditScreen = ({navigation, route}: StepEditScreenProps) => {
                 }}>
                 <View style={{flex: 1, position: 'relative'}}>
                   <TextInput
-                    style={[globalStyle.fontInput, styles.inputAbsolute]}
+                    style={[globalStyle.fontInput, styles.waterInput]}
                     value={waterAmount}
-                    onKeyPress={(e) => backspaceHandler(e)}
                     onChange={(e) => waterInputChangeHandler(e)}
                     keyboardType="numeric"
                     onFocus={() => setWaterFocused(true)}
                     onBlur={() => setWaterFocused(false)}
                   />
-                  <AppText
-                    style={[globalStyle.fontInput, {textAlign: 'center'}]}>
-                    {waterAmount}
-                  </AppText>
                 </View>
               </View>
               <AppText style={globalStyle.fontInput}> g</AppText>
@@ -230,15 +223,8 @@ const styles = StyleSheet.create({
     flexWrap: 'nowrap',
     justifyContent: 'space-between',
   },
-  inputAbsolute: {
-    position: 'absolute',
-    opacity: 0,
-    zIndex: 10,
+  waterInput: {
     padding: 0,
-    top: 0,
-    bottom: 0,
     textAlign: 'center',
-    left: 0,
-    right: 0,
   },
 });
